@@ -20,8 +20,9 @@ public class StartUpActivity extends Activity {
 	// Debug
     private static final String TAG = "StartUp";
     
-    private static String CONSUMER_KEY = "pYOke1sv1o7FoHB1qrvg";
-	private static String CONSUMER_SECRET = "nePzPbjhXPIKQNQU8iZP65Z1Hzbux1c6znAfR3M2zc";
+    public static String CONSUMER_KEY = "7uTPcYftfVfN2i7kgCOQ";
+    public static String CONSUMER_SECRET = "fnCdZV8rWTWOt5x7LQxxJmq76Q9wGnYE30QRo9ZT0U";
+	public static final String CALLBACK_URL = "taskquest://oauth"; // TwitterサイトからコールバックされるURL
 	
     public static RequestToken _req = null;
     public static OAuthAuthorization _oauth = null;
@@ -30,7 +31,7 @@ public class StartUpActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startup);
- 
+        
         Button btn = (Button)findViewById(R.id.button1);
         btn.setOnClickListener(new OnClickListener() {
  
@@ -42,24 +43,21 @@ public class StartUpActivity extends Activity {
     }
  
     private void executeOauth(){
+    	
         //Twitetr4jの設定を読み込む
         Configuration conf = ConfigurationContext.getInstance();
  
         //Oauth認証オブジェクト作成
         _oauth = new OAuthAuthorization(conf);
-        //Oauth認証オブジェクトにconsumerKeyとconsumerSecretを設定
         _oauth.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-        //_oauth.setOAuthConsumer("iy2FEHXmSXNReJ6nYQ8FRg", "KYro4jM8BHlLSMsSdTylnTcm3pYaTCiG2UZrYK1yI4");
         _oauth.setOAuthAccessToken(null);
         //アプリの認証オブジェクト作成
         try {
-        	//_req = _oauth.getOAuthRequestToken("Callback://CallBackActivity");
-            _req = _oauth.getOAuthRequestToken("TaskQuest://CallBackActivity");
+            _req = _oauth.getOAuthRequestToken(CALLBACK_URL);
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-        Log.d(TAG,"-----");
-        Log.d(TAG,_req+"");
+        
         String _uri;
         _uri = _req.getAuthorizationURL();
         startActivityForResult(new Intent(Intent.ACTION_VIEW , Uri.parse(_uri)), 0);
